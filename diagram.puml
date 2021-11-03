@@ -1,0 +1,38 @@
+@startuml diagram practice
+!includeurl https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/master/C4_Context.puml
+
+Person(user,"Usuario","Usuario de la aplicación")
+
+System(web_client_system,"Web Client","Administración de la configuración de las tareas")
+
+System(ms_commands,"Java, SpringBoot","Contiene los endPoint que alteran el estado de las entidades")
+System(ms_queries,"Java, SpringBoot","Contiene los endPoint que recueprarn información almacenada")
+System(ms_extended,"Java, SpringBoot","Componentes extendidos de los subservicios")
+
+System(rabbit_mq,"Rabbit MQ","Gestor de colas y eventos")
+
+System_Ext(email_systema, "Email Notificacion", "Envio de correo electrónico")
+
+System(nosql_commands, "Database", "Mongo Db para eventos", "Almacenamiento de eventos")
+System(nosql_queries, "Database", "Mongo Db para lectura", "Optiene información")
+
+
+Rel(user, web_client_system, "Usa")
+Rel(ms_extended, email_systema, "Usa")
+
+Rel(web_client_system, ms_commands, "Consume")
+Rel(web_client_system, ms_queries, "Consume")
+
+Rel(ms_commands, ms_extended, "Usa")
+Rel(ms_queries, ms_extended, "Usa")
+
+Rel(ms_commands, rabbit_mq, "Consume")
+
+Rel(ms_commands, nosql_commands, "Consume")
+Rel(ms_queries, nosql_queries, "Consume")
+
+Rel(rabbit_mq, nosql_queries, "Usa")
+
+
+
+@enduml
